@@ -3,243 +3,517 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CHART :: TOP MUSIC & PLAYLIST</title>
+    <title>BEATSTREAM :: PREMIUM MUSIC CHART</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-dark: #121212;
-            --card-bg: #181818;
-            --card-hover: #282828;
-            --primary: #1ed760;
-            --text-main: #ffffff;
-            --text-sub: #b3b3b3;
+            --bg-base: #09090b;
+            --bg-surface: #121215;
+            --bg-card: #1a1a1e;
+            --bg-card-hover: #26262b;
+            --accent: #22c55e;
+            --accent-hover: #16a34a;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --border: rgba(255, 255, 255, 0.08);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            padding-bottom: 120px;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            padding-bottom: 110px;
+            overflow-x: hidden;
         }
 
+        /* Top Navigation */
         header {
-            padding: 2rem 1.5rem;
-            background: linear-gradient(180deg, #222 0%, var(--bg-dark) 100%);
-            text-align: center;
-        }
-
-        header h1 { font-size: 2rem; color: var(--primary); margin-bottom: 0.5rem; }
-
-        /* Category Tabs */
-        .tabs {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 1rem;
-            flex-wrap: wrap;
-            background: #000;
             position: sticky;
             top: 0;
-            z-index: 10;
+            z-index: 50;
+            background: rgba(9, 9, 11, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
         }
 
-        .tab-btn {
-            background: #222;
-            color: var(--text-sub);
-            border: none;
-            padding: 0.6rem 1.2rem;
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+        }
+        .logo i { color: var(--accent); }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            max-width: 420px;
+        }
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+        .search-box input {
+            width: 100%;
+            padding: 0.6rem 1rem 0.6rem 2.8rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
             border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
             transition: all 0.2s;
         }
-
-        .tab-btn:hover, .tab-btn.active {
-            background: var(--primary);
-            color: #000;
+        .search-box input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
         }
 
+        /* Category Bar */
+        .category-bar {
+            display: flex;
+            gap: 0.6rem;
+            padding: 1rem 2rem;
+            overflow-x: auto;
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+        }
+        .cat-btn {
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1.1rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .cat-btn:hover, .cat-btn.active {
+            background: var(--text-primary);
+            color: var(--bg-base);
+            border-color: var(--text-primary);
+        }
+        .cat-btn.my-tab {
+            margin-left: auto;
+            border-color: rgba(225, 29, 72, 0.4);
+            color: #f43f5e;
+        }
+        .cat-btn.my-tab.active, .cat-btn.my-tab:hover {
+            background: #f43f5e;
+            color: #fff;
+        }
+
+        /* Main Container */
         .container {
-            max-width: 900px;
-            margin: 1.5rem auto;
-            padding: 0 1rem;
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.2rem;
+        }
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        .count-badge {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
         }
 
-        /* Chart Table List */
-        .chart-list { display: flex; flex-direction: column; gap: 0.5rem; }
-
+        /* Music Chart Table */
+        .chart-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
         .chart-item {
             display: flex;
             align-items: center;
-            background: var(--card-bg);
-            padding: 0.8rem 1rem;
-            border-radius: 8px;
-            transition: background 0.2s;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            padding: 0.7rem 1.2rem;
+            border-radius: 10px;
+            transition: all 0.2s;
             cursor: pointer;
         }
-
-        .chart-item:hover { background: var(--card-hover); }
-
-        .rank { font-size: 1.2rem; font-weight: bold; width: 40px; color: var(--primary); text-align: center; }
-        .album-icon { font-size: 1.8rem; margin-right: 1rem; }
-        .info { flex: 1; }
-        .title { font-weight: bold; font-size: 1rem; margin-bottom: 0.2rem; }
-        .artist { color: var(--text-sub); font-size: 0.85rem; }
-
-        .actions { display: flex; gap: 0.8rem; align-items: center; }
-        .like-btn {
+        .chart-item:hover {
+            background: var(--bg-card-hover);
+            transform: translateX(4px);
+        }
+        .rank-num {
+            width: 45px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--accent);
+            text-align: center;
+        }
+        .album-art {
+            width: 48px;
+            height: 48px;
+            border-radius: 6px;
+            background: var(--bg-card);
+            margin-right: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .song-details {
+            flex: 1;
+            min-width: 0;
+        }
+        .song-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .song-artist {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.2rem;
+        }
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .icon-btn {
             background: none;
             border: none;
-            color: #666;
-            font-size: 1.3rem;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.2s;
+            padding: 0.4rem;
         }
+        .icon-btn:hover { color: #fff; }
+        .icon-btn.liked { color: #f43f5e; }
 
-        .like-btn.active { color: #e11d48; }
-        .like-btn:hover { transform: scale(1.2); }
-
-        /* Bottom Player Bar */
+        /* Bottom Player */
         .player-bar {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            background: #000;
-            border-top: 1px solid #333;
-            padding: 0.8rem 1.5rem;
+            height: 85px;
+            background: rgba(18, 18, 21, 0.95);
+            backdrop-filter: blur(16px);
+            border-top: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 1rem;
+            padding: 0 2rem;
             z-index: 100;
         }
+        .player-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            width: 280px;
+        }
+        .now-art {
+            width: 52px;
+            height: 52px;
+            border-radius: 6px;
+            background: #27272a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        .now-info .now-title { font-weight: 600; font-size: 0.9rem; }
+        .now-info .now-artist { font-size: 0.75rem; color: var(--text-secondary); }
 
-        .player-info { display: flex; align-items: center; gap: 1rem; }
-        .player-video { width: 160px; height: 90px; border-radius: 6px; overflow: hidden; }
-        .player-video iframe { width: 100%; height: 100%; border: none; }
+        .player-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            flex: 1;
+            max-width: 480px;
+        }
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+        .control-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+        .control-btn:hover { color: #fff; }
+        .play-main-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #fff;
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .player-right {
+            width: 220px;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .yt-frame-container {
+            width: 140px;
+            height: 65px;
+            border-radius: 6px;
+            overflow: hidden;
+            background: #000;
+            border: 1px solid var(--border);
+        }
+        .yt-frame-container iframe { width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>🎧 TOP MUSIC CHART</h1>
-        <p>실시간 인기차트 & 나만의 플레이리스트</p>
+        <div class="logo">
+            <i class="fa-solid fa-compact-disc fa-spin-pulse"></i> BEATSTREAM
+        </div>
+        <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="searchInput" placeholder="곡명, 가수 또는 카테고리 검색 (1,000+ 데이터)" oninput="handleSearch()">
+        </div>
     </header>
 
-    <!-- 카테고리 탭 -->
-    <div class="tabs">
-        <button class="tab-btn active" onclick="switchCategory('top')">🔥 종합 TOP</button>
-        <button class="tab-btn" onclick="switchCategory('hiphop')">🎤 힙합</button>
-        <button class="tab-btn" onclick="switchCategory('ballad')">🌧️ 발라드</button>
-        <button class="tab-btn" onclick="switchCategory('dance')">💃 댄스</button>
-        <button class="tab-btn" onclick="switchCategory('karaoke')">🎤 노래방 인기</button>
-        <button class="tab-btn" style="border: 1px solid var(--primary);" onclick="switchCategory('my')">❤️ 내 저장함</button>
+    <div class="category-bar">
+        <button class="cat-btn active" onclick="filterCategory('all', this)"><i class="fa-solid fa-fire"></i> 종합 TOP 100</button>
+        <button class="cat-btn" onclick="filterCategory('hiphop', this)"><i class="fa-solid fa-microphone"></i> 힙합/랩</button>
+        <button class="cat-btn" onclick="filterCategory('ballad', this)"><i class="fa-solid fa-cloud-rain"></i> 발라드</button>
+        <button class="cat-btn" onclick="filterCategory('dance', this)"><i class="fa-solid fa-bolt"></i> 댄스/POP</button>
+        <button class="cat-btn" onclick="filterCategory('karaoke', this)"><i class="fa-solid fa-music"></i> 노래방 차트</button>
+        <button class="cat-btn my-tab" onclick="filterCategory('my', this)"><i class="fa-solid fa-heart"></i> 내 저장함 (<span id="favCount">0</span>)</button>
     </div>
 
     <div class="container">
-        <div class="chart-list" id="chartList">
-            <!-- 자바스크립트로 동적 생성 -->
+        <div class="section-header">
+            <h2 class="section-title" id="chartTitle">실시간 종합 인기차트</h2>
+            <span class="count-badge" id="songCount">총 1,000곡 수록</span>
         </div>
+        <div class="chart-list" id="chartList"></div>
     </div>
 
-    <!-- 하단 재생 플레이어 바 -->
+    <!-- Player Bar -->
     <div class="player-bar">
-        <div class="player-info">
-            <div>
-                <div class="title" id="nowTitle">곡을 선택해주세요</div>
-                <div class="artist" id="nowArtist">실시간 유튜브 재생</div>
+        <div class="player-left">
+            <div class="now-art" id="nowArt">🎵</div>
+            <div class="now-info">
+                <div class="now-title" id="nowTitle">곡을 선택해주세요</div>
+                <div class="now-artist" id="nowArtist">실시간 스트리밍</div>
             </div>
         </div>
-        <div class="player-video">
-            <iframe id="ytPlayer" src="" allow="autoplay"></iframe>
+        <div class="player-center">
+            <div class="controls">
+                <button class="control-btn" onclick="prevSong()"><i class="fa-solid fa-backward-step"></i></button>
+                <div class="play-main-btn" onclick="togglePlay()"><i class="fa-solid fa-play" id="playIcon"></i></div>
+                <button class="control-btn" onclick="nextSong()"><i class="fa-solid fa-forward-step"></i></button>
+            </div>
+        </div>
+        <div class="player-right">
+            <div class="yt-frame-container">
+                <iframe id="ytPlayer" src="https://www.youtube.com/embed/m4_9_xQ_f14?enablejsapi=1" allow="autoplay"></iframe>
+            </div>
         </div>
     </div>
 
     <script>
-        // 노래 데이터베이스 (유튜브 비디오 ID 연동)
-        const musicData = [
-            { id: '1', rank: 1, category: 'hiphop', title: 'SPOT! (feat. JENNIE)', artist: '지코 (ZICO)', ytId: 'm4_9_xQ_f14', emoji: '🎧' },
-            { id: '2', rank: 2, category: 'dance', title: 'Supernova', artist: 'aespa', ytId: 'phuiAIQRUQs', emoji: '⚡' },
-            { id: '3', rank: 3, category: 'ballad', title: '그대를 내 품에', artist: '황치열', ytId: '3uA0Z31T32U', emoji: '🌧️' },
-            { id: '4', rank: 4, category: 'karaoke', title: '응급실', artist: 'izi', ytId: 'W3_rI5S2bJ4', emoji: '🎤' },
-            { id: '5', rank: 5, category: 'hiphop', title: 'TIMED OUT', artist: '창모', ytId: '3G4O9N4p4n8', emoji: '🔥' },
-            { id: '6', rank: 6, category: 'dance', title: 'How Sweet', artist: 'NewJeans', ytId: 'Q3K0TOvTOno', emoji: '🥐' }
+        // 대용량 음원 라이브러리 자동 생성기 (1,000+ 데이터셋 구조)
+        const baseCategories = ['hiphop', 'ballad', 'dance', 'karaoke'];
+        const emojis = ['🔥', '🎧', '⚡', '🌧️', '🎤', '🥐', '✨', '🌊', '🍷', '🌙'];
+        const artistSeed = ['지코', 'aespa', 'NewJeans', '창모', '황치열', 'izi', '아이유', 'DAY6', '성시경', 'AKMU', '방탄소년단', 'BLACKPINK'];
+
+        let musicDb = [
+            { id: 1, title: 'SPOT! (feat. JENNIE)', artist: '지코 (ZICO)', category: 'hiphop', ytId: 'm4_9_xQ_f14', emoji: '🎧' },
+            { id: 2, title: 'Supernova', artist: 'aespa', category: 'dance', ytId: 'phuiAIQRUQs', emoji: '⚡' },
+            { id: 3, title: 'How Sweet', artist: 'NewJeans', category: 'dance', ytId: 'Q3K0TOvTOno', emoji: '🥐' },
+            { id: 4, title: '그대를 내 품에', artist: '황치열', category: 'ballad', ytId: '3uA0Z31T32U', emoji: '🌧️' },
+            { id: 5, title: '응급실', artist: 'izi', category: 'karaoke', ytId: 'W3_rI5S2bJ4', emoji: '🎤' },
+            { id: 6, title: 'TIMED OUT', artist: '창모', category: 'hiphop', ytId: '3G4O9N4p4n8', emoji: '🔥' }
         ];
 
-        let myPlaylist = JSON.parse(localStorage.getItem('myPlaylist') || '[]');
-        let currentCategory = 'top';
-
-        function renderChart(items) {
-            const listEl = document.getElementById('chartList');
-            listEl.innerHTML = '';
-
-            if (items.length === 0) {
-                listEl.innerHTML = '<div style="text-align:center; padding:3rem; color:#888;">저장된 노래가 없습니다.</div>';
-                return;
-            }
-
-            items.forEach((song, idx) => {
-                const isLiked = myPlaylist.includes(song.id);
-                const item = document.createElement('div');
-                item.className = 'chart-item';
-                item.innerHTML = `
-                    <div class="rank">${idx + 1}</div>
-                    <div class="album-icon">${song.emoji}</div>
-                    <div class="info" onclick="playSong('${song.title}', '${song.artist}', '${song.ytId}')">
-                        <div class="title">${song.title}</div>
-                        <div class="artist">${song.artist}</div>
-                    </div>
-                    <div class="actions">
-                        <button class="like-btn ${isLiked ? 'active' : ''}" onclick="toggleLike(event, '${song.id}')">♥</button>
-                    </div>
-                `;
-                listEl.appendChild(item);
+        // 1,000개까지 시뮬레이션 데이터 확장
+        for (let i = 7; i <= 1000; i++) {
+            const cat = baseCategories[i % baseCategories.length];
+            const artist = artistSeed[i % artistSeed.length];
+            musicDb.push({
+                id: i,
+                title: `Chart Track #${i} (${cat.toUpperCase()})`,
+                artist: `${artist} & Artist Vol.${i}`,
+                category: cat,
+                ytId: 'm4_9_xQ_f14',
+                emoji: emojis[i % emojis.length]
             });
         }
 
-        function playSong(title, artist, ytId) {
-            document.getElementById('nowTitle').innerText = title;
-            document.getElementById('nowArtist').innerText = artist;
-            document.getElementById('ytPlayer').src = `https://www.youtube.com/embed/${ytId}?autoplay=1`;
+        let myFavorites = JSON.parse(localStorage.getItem('myMusicFavs') || '[]');
+        let currentList = [...musicDb];
+        let currentIndex = 0;
+        let isPlaying = false;
+
+        function updateFavCount() {
+            document.getElementById('favCount').innerText = myFavorites.length;
         }
 
-        function toggleLike(event, id) {
-            event.stopPropagation();
-            if (myPlaylist.includes(id)) {
-                myPlaylist = myPlaylist.filter(item => item !== id);
-            } else {
-                myPlaylist.push(id);
+        function renderList(list) {
+            currentList = list;
+            const container = document.getElementById('chartList');
+            container.innerHTML = '';
+
+            document.getElementById('songCount').innerText = `총 ${list.length}곡`;
+
+            if (list.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:4rem; color:#71717a;">검색 결과 또는 저장된 노래가 없습니다.</div>';
+                return;
             }
-            localStorage.setItem('myPlaylist', JSON.stringify(myPlaylist));
+
+            // 상위 100개 우선 렌더링 (성능 최적화)
+            const displayList = list.slice(0, 100);
+
+            displayList.forEach((song, idx) => {
+                const isLiked = myFavorites.includes(song.id);
+                const item = document.createElement('div');
+                item.className = 'chart-item';
+                item.innerHTML = `
+                    <div class="rank-num">${idx + 1}</div>
+                    <div class="album-art">${song.emoji}</div>
+                    <div class="song-details" onclick="playSongByIndex(${idx})">
+                        <div class="song-title">${song.title}</div>
+                        <div class="song-artist">${song.artist} • <span style="text-transform:uppercase; font-size:0.75rem; color:#71717a;">${song.category}</span></div>
+                    </div>
+                    <div class="actions">
+                        <button class="icon-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike(event, ${song.id})">
+                            <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function playSongByIndex(index) {
+            currentIndex = index;
+            const song = currentList[index];
+            document.getElementById('nowTitle').innerText = song.title;
+            document.getElementById('nowArtist').innerText = song.artist;
+            document.getElementById('nowArt').innerText = song.emoji;
+            document.getElementById('ytPlayer').src = `https://www.youtube.com/embed/${song.ytId}?autoplay=1`;
             
-            // Re-render
-            if (currentCategory === 'my') {
-                const likedSongs = musicData.filter(s => myPlaylist.includes(s.id));
-                renderChart(likedSongs);
+            isPlaying = true;
+            document.getElementById('playIcon').className = 'fa-solid fa-pause';
+        }
+
+        function togglePlay() {
+            const player = document.getElementById('ytPlayer');
+            const playIcon = document.getElementById('playIcon');
+            if (isPlaying) {
+                player.src = "";
+                isPlaying = false;
+                playIcon.className = 'fa-solid fa-play';
             } else {
-                switchCategory(currentCategory);
+                if (currentList.length > 0) playSongByIndex(currentIndex);
             }
         }
 
-        function switchCategory(cat) {
-            currentCategory = cat;
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+        function prevSong() {
+            if (currentIndex > 0) playSongByIndex(currentIndex - 1);
+        }
 
-            if (cat === 'top') {
-                renderChart(musicData);
+        function nextSong() {
+            if (currentIndex < currentList.length - 1) playSongByIndex(currentIndex + 1);
+        }
+
+        function toggleLike(e, id) {
+            e.stopPropagation();
+            if (myFavorites.includes(id)) {
+                myFavorites = myFavorites.filter(item => item !== id);
+            } else {
+                myFavorites.push(id);
+            }
+            localStorage.setItem('myMusicFavs', JSON.stringify(myFavorites));
+            updateFavCount();
+
+            // 현재 화면 재갱신
+            const activeTab = document.querySelector('.cat-btn.active');
+            if (activeTab && activeTab.classList.contains('my-tab')) {
+                filterCategory('my', activeTab);
+            } else {
+                renderList(currentList);
+            }
+        }
+
+        function filterCategory(cat, btn) {
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const titleEl = document.getElementById('chartTitle');
+
+            if (cat === 'all') {
+                titleEl.innerText = "실시간 종합 인기차트";
+                renderList(musicDb);
             } else if (cat === 'my') {
-                const likedSongs = musicData.filter(s => myPlaylist.includes(s.id));
-                renderChart(likedSongs);
+                titleEl.innerText = "❤️️ 내가 저장한 플레이리스트";
+                const favSongs = musicDb.filter(s => myFavorites.includes(s.id));
+                renderList(favSongs);
             } else {
-                const filtered = musicData.filter(s => s.category === cat);
-                renderChart(filtered);
+                titleEl.innerText = `${btn.innerText} 인기 차트`;
+                const filtered = musicDb.filter(s => s.category === cat);
+                renderList(filtered);
             }
         }
 
-        // 초기 실행
-        renderChart(musicData);
+        function handleSearch() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            if (!query) {
+                renderList(musicDb);
+                return;
+            }
+            const filtered = musicDb.filter(s => 
+                s.title.toLowerCase().includes(query) || 
+                s.artist.toLowerCase().includes(query) ||
+                s.category.toLowerCase().includes(query)
+            );
+            document.getElementById('chartTitle').innerText = `'${query}' 검색 결과`;
+            renderList(filtered);
+        }
+
+        // 초기화
+        updateFavCount();
+        renderList(musicDb);
     </script>
 </body>
 </html>
