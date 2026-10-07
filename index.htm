@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YUN EE ARCHIVE :: OFFICIAL</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-black: #111111;
+            --text-sub: #767676;
+            --border-light: #e5e5e5;
+            --bg-gray: #f9f9f9;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Helvetica Neue", Arial, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-black); line-height: 1.5; padding-bottom: 5rem; letter-spacing: -0.2px; }
+
+        /* Shopping Mall Header */
+        header {
+            border-bottom: 1px solid var(--border-light);
+            background: #fff; position: sticky; top: 0; z-index: 100;
+        }
+        .top-nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem 3rem; max-width: 1400px; margin: 0 auto;
+        }
+        .logo { font-size: 1.6rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; font-family: 'Times New Roman', serif; }
+        .menu-list { display: flex; gap: 2rem; list-style: none; }
+        .menu-list a { text-decoration: none; color: var(--text-black); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; transition: color 0.2s; }
+        .menu-list a:hover { color: var(--text-sub); }
+
+        .header-sub-bar {
+            text-align: center; padding: 0.8rem 0; border-top: 1px solid var(--border-light); font-size: 0.8rem; color: var(--text-sub); letter-spacing: 1px; text-transform: uppercase;
+        }
+
+        .container { max-width: 1100px; margin: 3rem auto; padding: 0 1.5rem; }
+
+        /* Category Breadcrumb / Title */
+        .category-title { text-align: center; margin-bottom: 3.5rem; }
+        .category-title h2 { font-size: 1.8rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; font-family: 'Times New Roman', serif; }
+        .category-title p { font-size: 0.85rem; color: var(--text-sub); margin-top: 0.5rem; }
+
+        /* Section Layouts */
+        .section-box { display: none; margin-bottom: 4rem; }
+        .section-box.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* 1. About Me (Mall Details Style) */
+        .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+        @media (max-width: 768px) { .profile-grid { grid-template-columns: 1fr; } }
+
+        .spec-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        .spec-table th, .spec-table td { padding: 0.9rem 0; border-bottom: 1px solid var(--border-light); text-align: left; font-size: 0.9rem; }
+        .spec-table th { width: 30%; color: var(--text-sub); font-weight: 500; }
+        .spec-table td { font-weight: 600; }
+
+        .mbti-card { background: var(--bg-gray); padding: 1.5rem; border-radius: 4px; border: 1px solid var(--border-light); }
+        .mbti-card h4 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.8rem; }
+        .mbti-list { list-style: none; font-size: 0.88rem; color: #444; }
+        .mbti-list li { margin-bottom: 0.4rem; position: relative; padding-left: 1.2rem; }
+        .mbti-list li::before { content: "•"; position: absolute; left: 0; color: var(--text-black); }
+
+        /* 2. Architecture Curriculum */
+        .grade-bar { display: flex; gap: 0.5rem; border-bottom: 1px solid var(--border-light); margin-bottom: 2rem; }
+        .grade-btn { background: none; border: none; padding: 0.8rem 1.5rem; font-size: 0.9rem; font-weight: 600; color: var(--text-sub); cursor: pointer; border-bottom: 2px solid transparent; }
+        .grade-btn.active { color: var(--text-black); border-bottom-color: var(--text-black); }
+
+        .progress-container { background: var(--bg-gray); padding: 1.2rem; border: 1px solid var(--border-light); margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .progress-bar-bg { background: #ddd; height: 6px; width: 60%; border-radius: 3px; overflow: hidden; }
+        .progress-bar-fill { background: var(--text-black); height: 100%; width: 0%; transition: width 0.3s; }
+
+        .curr-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.8rem; }
+        .curr-item { background: #fff; border: 1px solid var(--border-light); padding: 0.9rem; display: flex; align-items: center; gap: 0.8rem; cursor: pointer; font-size: 0.88rem; font-weight: 600; }
+        .curr-item input { accent-color: var(--text-black); width: 16px; height: 16px; }
+
+        /* 3. Family Cards */
+        .family-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; }
+        @media (max-width: 768px) { .family-grid { grid-template-columns: repeat(2, 1fr); } }
+        .family-card { border: 1px solid var(--border-light); padding: 1.8rem 1rem; text-align: center; background: #fff; }
+        .family-card .year { font-size: 0.75rem; color: var(--text-sub); font-weight: 600; margin-bottom: 0.3rem; letter-spacing: 1px; }
+        .family-card .role { font-size: 1.05rem; font-weight: 700; }
+
+        /* 4. Game Section */
+        .game-card { background: var(--bg-gray); border: 1px solid var(--border-light); padding: 2rem; margin-bottom: 1.5rem; }
+        .game-q-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 1rem; }
+        .game-btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .game-opt-btn { background: #fff; border: 1px solid var(--border-light); padding: 1rem; font-size: 0.88rem; font-weight: 600; cursor: pointer; text-align: center; transition: all 0.2s; }
+        .game-opt-btn:hover, .game-opt-btn.selected { background: var(--text-black); color: #fff; border-color: var(--text-black); }
+
+        .submit-btn { width: 100%; background: var(--text-black); color: #fff; border: none; padding: 1.1rem; font-weight: 700; font-size: 0.95rem; cursor: pointer; letter-spacing: 1px; }
+
+        /* Modal Popup */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 200; }
+        .modal-content { background: #fff; padding: 2.5rem; width: 90%; max-width: 400px; text-align: center; border: 1px solid var(--text-black); }
+
+        /* Guestbook */
+        .gb-input-box { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+        .gb-input-box input, .gb-input-box textarea { border: 1px solid var(--border-light); padding: 0.8rem; font-size: 0.88rem; outline: none; }
+        .gb-input-box input { width: 150px; }
+        .gb-input-box textarea { flex: 1; height: 42px; resize: none; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="top-nav">
+            <div class="logo">YUN EE ARCHIVE</div>
+            <ul class="menu-list">
+                <li><a href="javascript:void(0)" onclick="switchTab('about')">ABOUT ME</a></li>
+                <li><a href="javascript:void(0)" onclick="switchTab('archi')">건축인간</a></li>
+                <li><a href="javascript:void(0)" onclick="switchTab('family')">FAMILY</a></li>
+                <li><a href="javascript:void(0)" onclick="switchTab('game')">GAME</a></li>
+                <li><a href="javascript:void(0)" onclick="switchTab('guest')">GUESTBOOK</a></li>
+            </ul>
+        </div>
+        <div class="header-sub-bar">CHONNAM NATIONAL UNIVERSITY ARCHITECTURAL ENGINEERING</div>
+    </header>
+
+    <div class="container">
+        <!-- Category Title -->
+        <div class="category-title">
+            <h2 id="catTitle">ABOUT ME</h2>
+            <p id="catSub">전남대학교 건축공학과 퍼스널 포트폴리오</p>
+        </div>
+
+        <!-- 1. ABOUT ME -->
+        <div class="section-box active" id="sec-about">
+            <div class="profile-grid">
+                <div>
+                    <h3 style="font-size:1.2rem; font-weight:700; margin-bottom:1rem; padding-bottom:0.5rem; border-bottom:2px solid var(--text-black);">PROFILE INFO</h3>
+                    <table class="spec-table">
+                        <tr><th>MBTI</th><td>ESFP (자유로운 영혼의 연예인)</td></tr>
+                        <tr><th>INSTAGRAM</th><td><a href="https://instagram.com" target="_blank" style="color:var(--text-black);">@70.30.oc</a></td></tr>
+                        <tr><th>BLOG</th><td><a href="https://blog.naver.com" target="_blank" style="color:var(--text-black);">yun ee</a></td></tr>
+                        <tr><th>MAJOR</th><td>전남대학교 건축공학과</td></tr>
+                    </table>
+                </div>
+
+                <div>
+                    <h3 style="font-size:1.2rem; font-weight:700; margin-bottom:1rem; padding-bottom:0.5rem; border-bottom:2px solid var(--text-black);">ESFP CHARACTERISTICS</h3>
+                    <div style="display:flex; flex-direction:column; gap:1rem;">
+                        <div class="mbti-card">
+                            <h4 style="color:#2b8a3e;">STRENGTHS (장점)</h4>
+                            <ul class="mbti-list">
+                                <li>뛰어난 분위기 메이커 및 높은 사교성</li>
+                                <li>현실적이고 순발력 있는 문제 해결 능력</li>
+                                <li>공간 및 패션 감각, 미적 감각이 뛰어남</li>
+                            </ul>
+                        </div>
+                        <div class="mbti-card">
+                            <h4 style="color:#c92a2a;">WEAKNESSES (단점)</h4>
+                            <ul class="mbti-list">
+                                <li>장기적인 계획 수립 시 쉽게 지루함을 느낌</li>
+                                <li>충동적인 결정 및 거절을 어려워함</li>
+                                <li>반복적이고 단조로운 루틴을 싫어함</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. 건축인간 (교과과정) -->
+        <div class="section-box" id="sec-archi">
+            <div class="progress-container">
+                <div>
+                    <span style="font-weight:700; font-size:0.9rem;">전체 교과과정 이수율</span>
+                    <span id="currPctText" style="font-size:0.85rem; color:var(--text-sub); margin-left:0.5rem;">0%</span>
+                </div>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" id="currBar"></div></div>
+            </div>
+
+            <div class="grade-bar">
+                <button class="grade-btn active" onclick="setGrade(1, this)">1학년</button>
+                <button class="grade-btn" onclick="setGrade(2, this)">2학년</button>
+                <button class="grade-btn" onclick="setGrade(3, this)">3학년</button>
+                <button class="grade-btn" onclick="setGrade(4, this)">4학년</button>
+            </div>
+
+            <div class="curr-grid" id="currGrid"></div>
+        </div>
+
+        <!-- 3. FAMILY -->
+        <div class="section-box" id="sec-family">
+            <div class="family-grid">
+                <div class="family-card">
+                    <div class="year">1965</div>
+                    <div class="role">아빠 👨</div>
+                </div>
+                <div class="family-card">
+                    <div class="year">1967</div>
+                    <div class="role">엄마 👩</div>
+                </div>
+                <div class="family-card">
+                    <div class="year">1996</div>
+                    <div class="role">큰언니 👩‍🦰</div>
+                </div>
+                <div class="family-card">
+                    <div class="year">1998</div>
+                    <div class="role">작은언니 👧</div>
+                </div>
+                <div class="family-card" style="border-color:var(--text-black); background:var(--bg-gray);">
+                    <div class="year" style="color:var(--text-black);">2004 (막내)</div>
+                    <div class="role">나 👑</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. GAME (30가지 랜덤 질문) -->
+        <div class="section-box" id="sec-game">
+            <p style="font-size:0.85rem; color:var(--text-sub); text-align:center; margin-bottom:1.5rem;">새로고침(F5)을 할 때마다 30가지 질문 DB에서 새로운 질문이 무작위로 출제됩니다.</p>
+            <div id="gameContainer"></div>
+            <button class="submit-btn" onclick="calcGameScore()">RESULT CHECK</button>
+        </div>
+
+        <!-- 5. GUESTBOOK -->
+        <div class="section-box" id="sec-guest">
+            <div class="gb-input-box">
+                <input type="text" id="gName" placeholder="NAME">
+                <textarea id="gMsg" placeholder="MESSAGE"></textarea>
+                <button class="submit-btn" style="width:auto; padding:0 1.5rem;" onclick="saveGuest()">SUBMIT</button>
+            </div>
+            <div id="gbList"></div>
+        </div>
+    </div>
+
+    <!-- Modal Popup -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-content">
+            <h3 style="font-size:1.2rem; font-weight:700; margin-bottom:0.5rem;">MATCH RESULT</h3>
+            <div style="font-size:2.8rem; font-weight:800; margin:1rem 0;" id="scoreNum">0%</div>
+            <p id="scoreMsg" style="font-size:0.88rem; color:var(--text-sub); margin-bottom:1.5rem;"></p>
+            <button class="submit-btn" onclick="closeModal()">CLOSE</button>
+        </div>
+    </div>
+
+    <script>
+        // Menu Switcher
+        function switchTab(tab) {
+            document.querySelectorAll('.section-box').forEach(b => b.classList.remove('active'));
+            const titleMap = {
+                'about': ['ABOUT ME', '전남대학교 건축공학과 퍼스널 포트폴리오'],
+                'archi': ['건축인간', '전남대학교 건축공학과 학년별 교과과정'],
+                'family': ['MY FAMILY', '나를 항상 지지해주는 가족 구성원'],
+                'game': ['RANDOM GAME', '새로고침할 때마다 바뀌는 밸런스 & 만약에 게임'],
+                'guest': ['GUESTBOOK', '방문 후기 및 응원의 메시지를 남겨주세요']
+            };
+            document.getElementById('catTitle').innerText = titleMap[tab][0];
+            document.getElementById('catSub').innerText = titleMap[tab][1];
+            document.getElementById(`sec-${tab}`).classList.add('active');
+        }
+
+        // Curriculum Data
+        const archiCourses = {
+            1: ["건축학개론", "공학수학(1)", "공학미적분학", "기초글쓰기", "건축공학기초설계", "물리학및실험"],
+            2: ["건축구조역학", "건축재료학", "건축환경공학(1)", "BIM원론", "건축시공학(1)", "건축계획", "건축역학(2)", "건축설비기초"],
+            3: ["철근콘크리트구조", "강구조공학", "건축시공관리", "건축환경음향", "빌딩정보모델링(BIM)", "건축구조설계", "건축적치", "공정관리학"],
+            4: ["캡스톤디자인(1)", "한중콘크리트특론", "건축법규", "건축공학종합설계", "건축구조진단", "건축견적및원가관리"]
+        };
+
+        let curGrade = 1;
+        let checkedCourses = JSON.parse(localStorage.getItem('lowell_checked_courses') || '[]');
+
+        function renderCourses() {
+            const grid = document.getElementById('currGrid');
+            grid.innerHTML = '';
+            archiCourses[curGrade].forEach(c => {
+                const isChk = checkedCourses.includes(c);
+                const div = document.createElement('div');
+                div.className = 'curr-item';
+                div.innerHTML = `<input type="checkbox" ${isChk?'checked':''} onchange="toggleCourse('${c}')"> <span>${c}</span>`;
+                grid.appendChild(div);
+            });
+
+            let total = 0;
+            Object.values(archiCourses).forEach(l => total += l.length);
+            const pct = Math.round((checkedCourses.length / total) * 100);
+            document.getElementById('currPctText').innerText = `${pct}% (${checkedCourses.length}/${total} 과목 이수)`;
+            document.getElementById('currBar').style.width = `${pct}%`;
+        }
+
+        function setGrade(g, btn) {
+            curGrade = g;
+            document.querySelectorAll('.grade-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderCourses();
+        }
+
+        function toggleCourse(c) {
+            if(checkedCourses.includes(c)) checkedCourses = checkedCourses.filter(i => i !== c);
+            else checkedCourses.push(c);
+            localStorage.setItem('lowell_checked_courses', JSON.stringify(checkedCourses));
+            renderCourses();
+        }
+
+        // 30가지 질문 데이터베이스 (새로고침할 때마다 4개 추출)
+        const questionBank = [
+            { q: "[밸런스] 공부할 때 최적의 장소는?", a: ["백색소음 있는 감성 카페", "조용한 중앙 도서관"], my: 0 },
+            { q: "[밸런스] 내가 선호하는 데일리 패션 스타일은?", a: ["힙한 유니섹스 스트릿 룩", "단정하고 깔끔한 모던 룩"], my: 0 },
+            { q: "[만약에] 내 건물을 자유롭게 직접 지을 수 있다면?", a: ["1층에 디저트 가득한 감성 카페 건물", "경치 좋은 전원주택"], my: 0 },
+            { q: "[만약에] 갑자기 내일 종강을 한다면 할 일은?", a: ["즉시 가방 싸서 여행 가기", "침대에서 하루 종일 넷플릭스 보기"], my: 0 },
+            { q: "[밸런스] 아침에 일어나서 먼저 마시는 음료는?", a: ["무조건 아이스 아메리카노", "따뜻하고 달달한 라떼"], my: 0 },
+            { q: "[밸런스] 여행 계획을 세울 때 나의 스타일은?", a: ["발길 닿는 대로 가보는 즉흥 여행", "시간대별 분 단위 계획 여행"], my: 0 },
+            { q: "[만약에] 평생 한 가지 음식만 먹어야 한다면?", a: ["겉바속촉 수제 휘낭시에/디저트", "매콤한 떡볶이"], my: 0 },
+            { q: "[밸런스] 스트레스 풀 때 더 선호하는 방법은?", a: ["친구들과 신나게 수다 떨며 놀기", "집에서 혼자 음악 들으며 힐링"], my: 0 },
+            { q: "[만약에] 10억 로또에 당첨된다면 먼저 할 일은?", a: ["나만의 감성 카페 공간 차리기", "통장에 예금하고 갓생 살기"], my: 0 },
+            { q: "[밸런스] 스마트폰 사진첩에 더 많은 사진은?", a: ["감성 카페/공간/음식 사진", "나와 친구들의 셀카 및 인물 사진"], my: 0 },
+            { q: "[만약에] 하루 동안 타임머신을 탈 수 있다면?", a: ["미래의 내 모습 보러 가기", "학창 시절 과거로 돌아가기"], my: 0 },
+            { q: "[밸런스] 쇼핑할 때 더 선호하는 방식은?", a: ["온라인 브랜드 자사몰 쇼핑", "오프라인 편집숍 직접 착용 쇼핑"], my: 0 },
+            { q: "[밸런스] 약속 장소를 정할 때 기준은?", a: ["인테리어와 분위기가 예쁜 곳", "음식이 정말 맛있는 곳"], my: 0 },
+            { q: "[만약에] 투명인간이 되는 능력이 생긴다면?", a: ["좋아하는 가수 콘서트 맨 앞줄 가기", "세계 비밀 장소 탐방하기"], my: 0 },
+            { q: "[밸런스] 영화나 드라마를 볼 때 중요한 것은?", a: ["영상미와 감성적인 연출", "탄탄한 스토리와 반전"], my: 0 },
+            { q: "[만약에] 평생 여름 vs 평생 겨울 중 하나만 고른다면?", a: ["시원한 옷차림의 평생 여름", "따뜻한 코디의 평생 겨울"], my: 0 },
+            { q: "[밸런스] 과제 제출 직전 나의 모습은?", a: ["미리미리 완벽하게 끝내둠", "마감 직전 초인적인 힘으로 제출"], my: 0 },
+            { q: "[밸런스] 더 끌리는 주말 오후의 풍경은?", a: ["햇살 들어오는 감성 카페 창가", "아늑한 내 방 이불 속"], my: 0 },
+            { q: "[만약에] 초능력을 하나 가질 수 있다면?", a: ["지구 어디든 가보는 순간이동", "사람의 마음을 읽는 텔레파시"], my: 0 },
+            { q: "[밸런스] 음악을 들을 때 더 중요한 요소는?", a: ["신나는 비트와 멜로디", "가사의 공감과 감성"], my: 0 },
+            { q: "[만약에] 내 인생이 영화로 만들어진다면 장르는?", a: ["유쾌하고 활기찬 청춘 코미디", "잔잔하고 감성적인 로맨스"], my: 0 },
+            { q: "[밸런스] 대화할 때 나의 스타일은?", a: ["이야기를 적극적으로 끌어가는 편", "상대방 이야기를 경청해 주는 편"], my: 0 },
+            { q: "[밸런스] 새로운 장소에 갔을 때 먼저 보는 것은?", a: ["공간의 인테리어와 조명", "사람들의 분위기와 활기"], my: 0 },
+            { q: "[만약에] 평생 디저트 금지 vs 평생 커피 금지?", a: ["평생 커피 금지 (디저트는 못 참음)", "평생 디저트 금지 (커피는 못 참음)"], my: 0 },
+            { q: "[밸런스] 옷을 살 때 가장 중시하는 요소는?", a: ["디자인과 핏", "편안함과 실용성"], my: 0 },
+            { q: "[만약에] 동물과 대화할 수 있는 능력이 생긴다면?", a: ["우리 집 반려동물 속마음 듣기", "길거리 길냥이들과 수다 떨기"], my: 0 },
+            { q: "[밸런스] 더 선호하는 휴식 방법은?", a: ["드라이브나 야외 산책", "집에서 유튜브/영화 감상"], my: 0 },
+            { q: "[밸런스] 약속 시간에 대한 나의 평소 모습은?", a: ["10분 전에 미리 도착해 있음", "딱 맞춰서 아슬아슬하게 도착"], my: 0 },
+            { q: "[만약에] 하루 동안 과거의 나를 만날 수 있다면?", a: ["더 신나게 놀라고 조언해 주기", "열심히 공부하라고 조언해 주기"], my: 0 },
+            { q: "[밸런스] 나를 더 잘 표현하는 단어는?", a: ["자유롭고 솔직한 에너자이저", "차분하고 깊이 있는 아티스트"], my: 0 }
+        ];
+
+        let selectedQuestions = [];
+        let userGameAnswers = [-1, -1, -1, -1];
+
+        function initRandomGame() {
+            // 30개 중 4개 셔플 추출
+            const shuffled = [...questionBank].sort(() => 0.5 - Math.random());
+            selectedQuestions = shuffled.slice(0, 4);
+
+            const container = document.getElementById('gameContainer');
+            container.innerHTML = '';
+
+            selectedQuestions.forEach((qObj, idx) => {
+                const card = document.createElement('div');
+                card.className = 'game-card';
+                card.innerHTML = `
+                    <div class="game-q-title">Q${idx+1}. ${qObj.q}</div>
+                    <div class="game-btn-group">
+                        <div class="game-opt-btn" onclick="selectGameOpt(${idx}, 0, this)">${qObj.a[0]}</div>
+                        <div class="game-opt-btn" onclick="selectGameOpt(${idx}, 1, this)">${qObj.a[1]}</div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function selectGameOpt(qIdx, optIdx, btn) {
+            userGameAnswers[qIdx] = optIdx;
+            btn.parentElement.querySelectorAll('.game-opt-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+        }
+
+        function calcGameScore() {
+            if(userGameAnswers.includes(-1)) return alert('모든 질문에 답을 선택해 주세요!');
+            let match = 0;
+            selectedQuestions.forEach((qObj, i) => {
+                if(qObj.my === userGameAnswers[i]) match++;
+            });
+            const pct = (match / 4) * 100;
+            document.getElementById('scoreNum').innerText = `${pct}%`;
+            document.getElementById('scoreMsg').innerText = pct >= 75 ? "🎉 취향과 생각하는 관점이 완전히 통하시네요!" : "✨ 서로 다른 독특한 매력을 지니고 계시네요!";
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function closeModal() { document.getElementById('modal').style.display = 'none'; }
+
+        // Guestbook
+        let guestData = JSON.parse(localStorage.getItem('lowell_guests') || '[]');
+        function renderGuests() {
+            const list = document.getElementById('gbList');
+            list.innerHTML = '';
+            guestData.forEach(g => {
+                const div = document.createElement('div');
+                div.style.cssText = "padding:1rem 0; border-bottom:1px solid var(--border-light); font-size:0.88rem;";
+                div.innerHTML = `<strong>${g.n}</strong>: ${g.m} <span style="color:var(--text-sub); font-size:0.75rem; float:right;">${g.d}</span>`;
+                list.appendChild(div);
+            });
+        }
+        function saveGuest() {
+            const n = document.getElementById('gName').value.trim();
+            const m = document.getElementById('gMsg').value.trim();
+            if(!n || !m) return alert('이름과 메시지를 입력해주세요');
+            guestData.unshift({ n, m, d: new Date().toLocaleDateString() });
+            localStorage.setItem('lowell_guests', JSON.stringify(guestData));
+            document.getElementById('gName').value = '';
+            document.getElementById('gMsg').value = '';
+            renderGuests();
+        }
+
+        renderCourses();
+        initRandomGame();
+        renderGuests();
+    </script>
+</body>
+</html>
